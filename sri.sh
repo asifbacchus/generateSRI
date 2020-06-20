@@ -30,7 +30,18 @@ displayError (){
 }
 
 scriptHelp (){
-    printf "\nSeems you need some help?\n\n"
+    printf "\n%sUsage: %s%s %s[--help] [--sha256|--sha384|--sha512] --file /file/to/hash%s\n\n" "$magenta" "$norm" "$scriptName" "$cyan" "$norm"
+    printf "%s---parameters---%s\n" "$magenta" "$norm"
+    printf "%s-h|-?|--help%s: show this help page\n" "$cyan" "$norm"
+    printf "%s-2|--sha256%s: generate SHA256 SRI hash\n" "$cyan" "$norm"
+    printf "%s-3|--sha384%s: generate SHA384 SRI hash (default)\n" "$cyan" "$norm"
+    printf "%s-5|--sha512%s: generate SHA512 SRI hash\n" "$cyan" "$norm"
+    printf "%s-f|--file%s: full path to the file for which you wish the SRI hash generated (required)\n\n" "$cyan" "$norm"
+    printf "%s---examples---%s\n" "$magenta" "$norm"
+    printf "Generate default SHA384 hash for styles.css located in the current directory:\n"
+    printf "%s%s -f styles.css%s\n\n" "$cyan" "$scriptName" "$norm"
+    printf "Generate SHA512 hash for /var/www/js/script.js:\n"
+    printf "%s%s -5 --file /var/www/js/script.js%s\n\n" "$cyan" "$scriptName" "$norm"
     exit 0;
 }
 
@@ -40,6 +51,7 @@ trapExit (){
 }
 
 ### default variables
+scriptName="$( basename "$0" )"
 algo='sha384'
 unset filename
 
