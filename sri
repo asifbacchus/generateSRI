@@ -52,6 +52,8 @@ trapExit (){
 
 ### default variables
 scriptName="$( basename "$0" )"
+doDir=0
+doFiles=0
 algo='sha384'
 unset filename
 
@@ -81,18 +83,25 @@ while [ $# -gt 0 ]; do
             # generate SRI using sha512
             algo='sha512'
             ;;
-        -f|--file)
-            # file for which to generate SRI hash
-            if [ -n "$2" ]; then
-                if [ -f "$2" ]; then
-                    filename="$2"
-                    shift
-                else
-                    displayError 3 "Cannot find file '${2}'."
-                fi
+        -d|--dir|--directory)
+            # verify directory exists
+            if [ -d "$2" ]; then
+                doDir=1
+                hashDir="${2%/}"
             else
-                displayError 3 'No filename specified.'
+                displayError 1 "Directory '$2' does not exist."
             fi
+            shift
+            ;;
+        -f|--file)
+            # has supplied list of files
+            if [ -z "$2" ]; then
+                displayError 1 'No filename(s) specified.'
+            else
+                doFiles=1
+                hashFiles="$2"
+            fi
+            shift
             ;;
         *)
             # unknown option
@@ -103,18 +112,37 @@ while [ $# -gt 0 ]; do
     esac
     shift
 done
-
-printf "\n%sselected algo: %s%s\n" "$magenta" "$norm" "$algo"
-printf "%sselected file: %s%s%s\n\n" "$magenta" "$norm" "$filename" "$norm"
+printf "\n"
 
 ### do SRI generation
-hash=$( openssl dgst -${algo} -binary "${filename}" | openssl base64 -A) > /dev/null 2>&1
-if [ -z "$hash" ]; then
-    displayError 4 'An error occurred while generating SRI hash.'
-else
-    printf "%sSRI hash: %s%s-%s%s\n\n" "$magenta" "$ok" "$algo" "$hash" "$norm"
+if [ "$doDir" -eq 1 ]; then
+    for file in "$hashDir"/*; do
+        hash=$( openssl dgst -${algo} -binary "$file" | openssl base64 -A) > /dev/null 2>&1
+        if [ -z "$hash" ]; then
+            printf "%s --> unable to generate SRI hash\n" "$file"
+        else
+            printf "%s%s --> %s%s-%s%s\n" "$magenta" "$file" "$ok" "$algo" "$hash" "$norm"
+        fi
+    done
 fi
 
+if [ "$doFiles" -eq 1 ]; then
+    for file in $hashFiles; do
+        # verify file exists, then hash it
+        if [ -f "$file" ]; then
+            hash=$( openssl dgst -${algo} -binary "$file" | openssl base64 -A) > /dev/null 2>&1
+            if [ -z "$hash" ]; then
+            printf "%s --> unable to generate SRI hash\n" "$file"
+            else
+                printf "%s%s --> %s%s-%s%s\n" "$magenta" "$file" "$ok" "$algo" "$hash" "$norm"
+            fi
+        else
+            printf "%s%s --> does not exist\n" "$err" "$file"
+        fi
+    done
+fi
+
+printf "\n"
 exit 0
 
 
