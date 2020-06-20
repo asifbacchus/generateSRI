@@ -107,6 +107,14 @@ while [ $# -gt 0 ]; do
             fi
             shift
             ;;
+        --filter)
+            if [ -z "$2" ]; then
+                displayError 1 'Filter cannot be blank.'
+            else
+                filter="$2"
+            fi
+            shift
+            ;;
         *)
             # unknown option
             printf "\n%sUnknown option: %s.\n" "$err" "$1"
@@ -120,7 +128,7 @@ printf "\n"
 
 ### do SRI generation
 if [ "$doDir" -eq 1 ]; then
-    for file in "$hashDir"/*; do
+    for file in "$hashDir"/${filter}; do
         hash=$( openssl dgst -${algo} -binary "$file" | openssl base64 -A) > /dev/null 2>&1
         if [ -z "$hash" ]; then
             printf "%s --> unable to generate SRI hash\n" "$file"
