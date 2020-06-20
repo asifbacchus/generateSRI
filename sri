@@ -51,6 +51,8 @@ scriptHelp (){
     printf "%s./%s -d /var/www/includes --filter 'foo*'%s\n\n" "$cyan" "$scriptName" "$norm"
     printf "Generate SHA256 hashes for all '.css' files in /var/www/css and 'script.js' in /var/www/js/\n"
     printf "%s./%s -2 -f /var/www/js/script.js -d /var/www/css --filter '*.css'%s\n\n" "$cyan" "$scriptName" "$norm"
+    printf "N.B. If you copy this script to somewhere in your path, like /usr/local/bin, then you can run it like any other command without having to specify a leading path ('./' in above examples):\n"
+    printf "%s%s -f /var/www/css/styles.css%s\n\n" "$cyan" "$scriptName" "$norm"
     exit 0;
 }
 
