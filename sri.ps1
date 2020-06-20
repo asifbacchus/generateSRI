@@ -1,3 +1,59 @@
+<# Create SRI hashes for specified files or directory contents #>
+
+<#
+.SYNOPSIS
+Create Sub-Resource Integrity (SRI) SHA hashes for specified files or directory contents.
+.\sri.ps1 -files file1[, file2, ...] -directory /path/to/directory [-filter filter] [-hashAlgo sha256|sha384|sha512]
+
+.DESCRIPTION
+Create Sub-Resource Integrity (SRI) SHA-256, SHA-384 or SHA-512 hashes for a specified list of files, a sub-set of files within a directory, or all files within a directory.
+
+.PARAMETER files
+A comma-separated list of files (full path suggested) for which to generate SRI hashes.
+EXAMPLE: style.css
+EXAMPLE: /some/path/style.css
+EXAMPLE: style.css, /some/other/path/menu.css
+ALIAS: file, list
+
+.PARAMETER directory
+Directory containing files for which to generate SRI hashes. Can be filtered using the 'filter' parameter.
+EXAMPLE: $env:userprofile\myWebSite\css
+EXAMPLE: C:\Websites\Website1\js
+
+.PARAMETER filter
+Process only files matching this criteria. Only relevant for directory operations.
+DEFAULT: * (all files)
+EXAMPLE: *.css
+EXAMPLE: script-site1*.js
+ALIAS: only, include
+
+.PARAMETER hashAlgo
+Use the specified algorithm to generate SRI hashes. Accepts sha256, sha384 (default), sha512.
+DEFAULT: sha384
+ALIAS: algorithm
+
+.EXAMPLE
+.\sri.ps1 style.css
+Generate default SHA384 hash for 'style.css' located in the current directory.
+
+.EXAMPLE
+.\sri.ps1 style.css, c:\websites\css\menu.css, $env:userprofile\Documents\website\script.js
+Generate default SHA384 hashes for 'style.css' in the current directory along with the other two files as specified by their full paths.
+
+.EXAMPLE
+.\sri.ps1 -directory c:\website\css -hashAlgo sha256
+Generate SHA256 hashes for all files in the 'C:\Website\css' directory
+
+.EXAMPLE
+.\sri.ps1 -dir c:\website\includes -filter *.js -algo sha512
+Generate SHA512 hashes (partial alias used for '-hashAlgo') for all files matching '*.js' in directory 'C:\website\includes'
+
+.EXAMPLE
+.\sri.ps1 -files img\logo.svg, media\video.mp4 -directory css
+Generate default SHA384 hashes for 'logo.svg' and 'video.mp4' in sub-folders 'img' and 'media', respectively, of the current folder. Then also generate hashes for all files in folder 'css', also a sub-folder of the current folder.
+#>
+
+
 param (
     # List of files to hash
     [Parameter(HelpMessage="Comma-separated list of files to hash.")]
@@ -12,9 +68,9 @@ param (
     [string]
     $directory,
 
-    # File filter
+    # File filter to apply to directory operations
     [Parameter(HelpMessage="Only hash files of this type, relevant only when processing a directory.")]
-    [Alias("only")]
+    [Alias("only", "include")]
     [ValidateNotNullOrEmpty()]
     [string]
     $filter = '*',
@@ -26,6 +82,7 @@ param (
     [string]
     $hashAlgo = 'sha384'
 )
+
 
 function displayError($returnCode, $eMsg){
     Write-Host "`nERROR: $eMsg" -ForegroundColor Red
