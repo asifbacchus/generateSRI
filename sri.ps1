@@ -3,10 +3,11 @@
 <#
 .SYNOPSIS
 Create Sub-Resource Integrity (SRI) SHA hashes for specified files or directory contents.
+
 .\sri.ps1 -files file1[, file2, ...] -directory /path/to/directory [-filter filter] [-hashAlgo sha256|sha384|sha512]
 
 .DESCRIPTION
-Create Sub-Resource Integrity (SRI) SHA-256, SHA-384 or SHA-512 hashes for a specified list of files, a sub-set of files within a directory, or all files within a directory.
+Create Sub-Resource Integrity (SRI) SHA-256, SHA-384 or SHA-512 hashes for a specified list of files, a subset of files within a directory, or all files within a directory.
 
 .PARAMETER files
 A comma-separated list of files (full path suggested) for which to generate SRI hashes.
