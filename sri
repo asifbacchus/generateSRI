@@ -54,6 +54,9 @@ trapExit (){
 scriptName="$( basename "$0" )"
 doDir=0
 doFiles=0
+unset hashDir
+unset hashFiles
+filter='*'
 algo='sha384'
 unset filename
 
