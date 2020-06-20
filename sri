@@ -87,7 +87,7 @@ while [ $# -gt 0 ]; do
             # verify directory exists
             if [ -d "$2" ]; then
                 doDir=1
-                hashDir="${2%/*}"
+                hashDir="${2%/}"
             elif [ -z "$2" ]; then
                 displayError 1 "No directory specified."
             else
