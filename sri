@@ -162,7 +162,5 @@ exit 0
 # 0:    no errors, normal execution
 # 1:    parameter error
 # 2:    cannot find openSSL binary
-# 3:    cannot find specified file for which to generate hash
-# 4:    error occured while executing openssl
 
 #EOF
