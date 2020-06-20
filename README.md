@@ -1,6 +1,14 @@
-# Sub-Resource Integrity Hash Generator Scripts
+# Sub-Resource Integrity Hash Generator Scripts <!-- omit in TOC -->
 
 Basic scripts to generate SRI hashes. POSIX-compliant shell script for use on *nix and PowerShell for use on Windows.
+
+- [common features](#common-features)
+- [Linux script](#linux-script)
+  - [copy to path location](#copy-to-path-location)
+  - [troubleshooting](#troubleshooting)
+- [PowerShell (POSH) script](#powershell-posh-script)
+  - [execution policy](#execution-policy)
+- [final thoughts](#final-thoughts)
 
 ## common features
 
