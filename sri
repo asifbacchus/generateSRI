@@ -30,18 +30,27 @@ displayError (){
 }
 
 scriptHelp (){
-    printf "\n%sUsage: %s%s %s[--help] [--sha256|--sha384|--sha512] --file /file/to/hash%s\n\n" "$magenta" "$norm" "$scriptName" "$cyan" "$norm"
+    printf "\n%sUsage: %s%s %s[--help] [--sha256|--sha384|--sha512] %s--file /path/to/file1 %s[/path/to/file2 ...]%s --directory /directory/to/hash %s[--filter 'filter']%s\n\n" "$magenta" "$norm" "$scriptName" "$cyan" "$norm" "$cyan" "$norm" "$cyan" "$norm"
+    printf "If both '--file' and '--directory' are specified, *both* will be processed.\n\n"
     printf "%s---parameters---%s\n" "$magenta" "$norm"
-    printf "%s-h|-?|--help%s: show this help page\n" "$cyan" "$norm"
-    printf "%s-2|--sha256%s: generate SHA256 SRI hash\n" "$cyan" "$norm"
-    printf "%s-3|--sha384%s: generate SHA384 SRI hash (default)\n" "$cyan" "$norm"
-    printf "%s-5|--sha512%s: generate SHA512 SRI hash\n" "$cyan" "$norm"
-    printf "%s-f|--file%s: full path to the file for which you wish the SRI hash generated (required)\n\n" "$cyan" "$norm"
+    printf "%s-h|-?|--help%s: Show this help page\n" "$cyan" "$norm"
+    printf "%s-2|--sha256%s: Generate SHA256 SRI hash\n" "$cyan" "$norm"
+    printf "%s-3|--sha384%s: Generate SHA384 SRI hash (default)\n" "$cyan" "$norm"
+    printf "%s-5|--sha512%s: Generate SHA512 SRI hash\n" "$cyan" "$norm"
+    printf "%s-f|--file%s: Full path of the file(s) to hash. Space delimited list accepted.\n" "$cyan" "$norm"
+    printf "%s-d|--dir|--directory%s: Hash each file within specified directory.\n" "$cyan" "$norm"
+    printf "%s--filter%s: Only considered when processing a directory (-d flag). Will only hash files matching this filter. Eg: '*.css', 'file*.ext'\n\n" "$cyan" "$norm"
     printf "%s---examples---%s\n" "$magenta" "$norm"
     printf "Generate default SHA384 hash for styles.css located in the current directory:\n"
-    printf "%s%s -f styles.css%s\n\n" "$cyan" "$scriptName" "$norm"
+    printf "%s./%s -f styles.css%s\n\n" "$cyan" "$scriptName" "$norm"
     printf "Generate SHA512 hash for /var/www/js/script.js:\n"
-    printf "%s%s -5 --file /var/www/js/script.js%s\n\n" "$cyan" "$scriptName" "$norm"
+    printf "%s./%s -5 --file /var/www/js/script.js%s\n\n" "$cyan" "$scriptName" "$norm"
+    printf "Generate default SHA384 hashes for all files in ~/webpage/css/\n"
+    printf "%s./%s --directory ~/webpage/css%s\n\n" "$cyan" "$scriptName" "$norm"
+    printf "Generate default SHA384 hashes for all files with names starting with 'foo' within /var/www/includes/\n"
+    printf "%s./%s -d /var/www/includes --filter 'foo*'%s\n\n" "$cyan" "$scriptName" "$norm"
+    printf "Generate SHA256 hashes for all '.css' files in /var/www/css and 'script.js' in /var/www/js/\n"
+    printf "%s./%s -2 -f /var/www/js/script.js -d /var/www/css --filter '*.css'%s\n\n" "$cyan" "$scriptName" "$norm"
     exit 0;
 }
 
