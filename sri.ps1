@@ -45,9 +45,8 @@ function hashSHA($type){
 }
 
 function doHash($file, $hash){
-    $fileContents = Get-Content $file -Raw
-        $fileContents = Get-Content $file -Raw -ErrorAction SilentlyContinue
     try {
+        $fileContents = Get-Content $file -Raw -ErrorAction SilentlyContinue
         $hashBytes = $hash.ComputeHash([System.Text.Encoding]::UTF8.GetBytes($fileContents))
         return [System.Convert]::ToBase64String($hashBytes)
     }
