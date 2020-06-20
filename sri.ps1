@@ -45,12 +45,12 @@ function hashSHA($type){
 }
 
 function doHash($file, $hash){
-    try {
+    try{
         $fileContents = Get-Content $file -Raw -ErrorAction SilentlyContinue
         $hashBytes = $hash.ComputeHash([System.Text.Encoding]::UTF8.GetBytes($fileContents))
         return [System.Convert]::ToBase64String($hashBytes)
     }
-    catch {
+    catch{
         return 1
     }
 }
@@ -64,32 +64,43 @@ $hash = hashSHA $hashAlgo
 if ($directory){
     # continue only if directory exists, otherwise exit with error
     if (Test-Path -Path $directory){
-        Write-Host "`nProcessing directory: $directory" -ForegroundColor Cyan
+        Write-Host "Processing directory: $directory" -ForegroundColor Cyan
         Get-ChildItem -Path $directory -Filter $filter | ForEach-Object({
             $hashValue = doHash $directory\$_ $hash
             if ($hashValue -ne 1){
                 Write-Host "$_ --> $hashAlgo-$hashValue" -ForegroundColor Green
             }
-            else {
+            else{
                 Write-Host "$_ --> unable to hash file" -ForegroundColor Red
             }
         })
     }
-    else {
+    else{
         displayError 1 "Directory '$directory' does not exist."
     }
 }
 
 # process file list, if specified
 if ($files) {
-    Write-Host
+    Write-Host "Processing files:" -ForegroundColor Cyan
     foreach ($file in $files) {
-        Write-Host "Processing $file"
+        if (Test-Path -Path $file){
+            $hashValue = doHash $file $hash
+            if ($hashValue -ne 1){
+                Write-Host "$file --> $hashAlgo-$hashValue" -ForegroundColor Green
+            }
+            else {
+                Write-Host "$file --> unable to hash file" -ForegroundColor Red
+            }
+        }
+        else{
+            Write-Host "$file --> cannot find file" -ForegroundColor Red
+        }
     }
-    Write-Host
 }
 
 # clean up and exit
+Write-Host
 $hash.Dispose()
 exit 0
 
