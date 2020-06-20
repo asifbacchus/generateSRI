@@ -58,7 +58,6 @@ unset hashDir
 unset hashFiles
 filter='*'
 algo='sha384'
-unset filename
 
 ### check pre-requisites
 if ! command -v openssl > /dev/null; then
